@@ -1,9 +1,9 @@
 # Game of life 3D
 
-Start: 05/10/2022
-Deadline: 1 Month after start
-Language used: Processing
-Programs used: Processing
+Start: 05/10/2022<br/>
+Deadline: 1 Month after start<br/>
+Language used: Processing<br/>
+Programs used: Processing<br/>
 
 
 "Conway's Game of Life
@@ -13,14 +13,13 @@ One interacts with the Game of Life by creating an initial configuration and obs
 It is Turing complete and can simulate a universal constructor or any other Turing machine."
 -- https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life --
 
-Rules of my game of life:
+Rules of my game of life:<br/>
 
-
-Resources used to code:
+Resources used to code:<br/>
 https://processing.org/
 
-Personal review of this assignment
+Personal review of this assignment<br/>
 
-What did I learn during this assignment
+What did I learn during this assignment<br/>
 
-Did I like this assignment
+Did I like this assignment<br/>
