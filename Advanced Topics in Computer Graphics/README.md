@@ -5,6 +5,7 @@ Start: 05/10/2020<br/>
 End:<br/>
 ECTS: 4<br/>
 Grade: To be achieved<br/>
+Teacher:<br/>
 
 Course website: Can I place this here?<br/>
 
