@@ -2,63 +2,76 @@ int cubeSize = 5;
 ArrayList<Cube> cubes = new ArrayList<Cube>();
 int i = 0;
 int totalCubes = 10;
+int n = 20;
+int ns = 400;
 int lifeCycleSpeed = 1000;
 int timer = 0;
 
 void setup() {
   size(1250, 1250, P3D);
   // Make cubes
+  int index = 0;
+  n = 2*totalCubes;
+  ns = n*n;
   for (var i =-totalCubes; i<totalCubes; i++) {
     for (var j =-totalCubes; j<totalCubes; j++) {
       for (var k =-totalCubes; k<totalCubes; k++) {
-        cubes.add(new Cube(i, j, k));
+        cubes.add(new Cube(i, j, k, index));
+        index++;
       }
     }
   }
   //  which cubes start alive/death
   for (Cube cube : cubes) {
     cube.startState();
+    cube.makeNeighbourList();
   }
 }
 
 void draw() {
-  background(255);
+  background(100, 200, 0);
   translate(width/2, height/2);
-  //rotateX(frameCount*0.01);
+  rotateX(frameCount*0.01);
   rotateY(frameCount*0.01);
   int wait = millis() - timer;
   for (Cube cube : cubes) {
-    cube.display();
-    if (wait > lifeCycleSpeed) {
-      cube.checkForNeighbours();
-      timer = millis();
-    }
-  }
-  for (Cube cube : cubes) {
     cube.update();
+  }
+  if (wait >= lifeCycleSpeed) {
+    for (Cube cube : cubes) {
+      cube.gameOfLife();
+    }
+    timer = millis();
   }
 }
 
 class Cube {
   int[] location={0, 0, 0};
+  IntList NeighbourList;
+  int index = 0;
+  int aliveNeighbours = 0;
   boolean alive = true;
   ArrayList<Cube> neighbours = new ArrayList<Cube>();
 
-  Cube (int x, int y, int z) {
+
+  Cube (int x, int y, int z, int index) {
     location[0] = x;
     location[1] = y;
     location[2] = z;
+    index = index;
   }
 
   void update() {
-    int total = neighbours.size();
-    if (total >= 3) {
+    display();
+  }
+
+  void gameOfLife() {
+    checkNeighbours();
+    if (aliveNeighbours >= 3) {
       alive = false;
-    }
-    if (total <= 1) {
+    } else if (aliveNeighbours <= 1) {
       alive = false;
-    }
-    if (total == 2) {
+    } else if (aliveNeighbours == 2) {
       alive = true;
     }
   }
@@ -68,6 +81,10 @@ class Cube {
     if ( ran < 50) {
       alive = false;
     }
+  }
+
+  boolean isAlive() {
+    return alive;
   }
 
   void display() {
@@ -84,98 +101,60 @@ class Cube {
     popMatrix();
   }
 
-  void checkForNeighbours() {
-    for (int i = neighbours.size() - 1; i >= 0; i--) {
-      Cube cube = neighbours.get(i);
-      neighbours.remove(i);
+  void makeNeighbourList() {
+    NeighbourList = new IntList();
+    NeighbourList.append(new int[]{index-n-1, index-n, index-n+1, index-1, index+1, index+n-1, index+n, index+n+1, index-n-1-ns, index-n-ns, index-n+1-ns, index-1-ns, index+1-ns, index+n-1-ns, index+n-ns, index+n+1-ns, index-ns, index-n-1+ns, index-n+ns, index-n+1+ns, index-1+ns, index+1+ns, index+n-1+ns, index+n+ns, index+n+1+ns, index+ns});
+    for (int i = NeighbourList.size() - 1; i >= 0; i--) {
+      if (NeighbourList.get(i) < 0) {
+        NeighbourList.remove(i);
+      }
     }
+  }
 
-    for (Cube cube : cubes) {
-      if (cube.alive) {
-        //Back row
-        if (location[0]-1 == cube.location[0] && location[1]-1 == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0] == cube.location[0] && location[1]-1 == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1]-1 == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]-1 == cube.location[0] && location[1] == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0] == cube.location[0] && location[1] == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1] == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]-1 == cube.location[0] && location[1]+1 == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0] == cube.location[0] && location[1]+1 == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1]+1 == cube.location[1] && location[2]-1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-
-        // Middle row
-        else if (location[0]-1 == cube.location[0] && location[1]-1 == cube.location[1] && location[2] == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0] == cube.location[0] && location[1]-1 == cube.location[1] && location[2] == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1]-1 == cube.location[1] && location[2] == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]-1 == cube.location[0] && location[1] == cube.location[1] && location[2] == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1] == cube.location[1] && location[2] == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]-1 == cube.location[0] && location[1]+1 == cube.location[1] && location[2] == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0] == cube.location[0] && location[1]+1 == cube.location[1] && location[2] == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1]+1 == cube.location[1] && location[2] == cube.location[2]) {
-          neighbours.add(cube);
-        }
-
-        // Front row
-        else if (location[0]-1 == cube.location[0] && location[1]-1 == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0] == cube.location[0] && location[1]-1 == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1]-1 == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]-1 == cube.location[0] && location[1] == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0] == cube.location[0] && location[1] == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1] == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]-1 == cube.location[0] && location[1]+1 == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0] == cube.location[0] && location[1]+1 == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
-        else if (location[0]+1 == cube.location[0] && location[1]+1 == cube.location[1] && location[2]+1 == cube.location[2]) {
-          neighbours.add(cube);
-        }
+  void checkNeighbours() {
+    aliveNeighbours=0;
+    for (int i = NeighbourList.size() - 1; i >= 0; i--) {
+      if (cubes.get(i).isAlive()) {
+        aliveNeighbours++;
       }
     }
   }
 }
+
+/*
+x = index
+ n = width
+ check
+ middle layer
+ index-n-1
+ index-n
+ index-n+1
+ index-1
+ index+1
+ index+n-1
+ index+n
+ index+n+1
+ 
+ bottom layer
+ index-n-1-ns
+ index-n-ns
+ index-n+1-ns
+ index-1-ns
+ index+1-ns
+ index+n-1-ns
+ index+n-ns
+ index+n+1-ns
+ index-ns
+ 
+ top layer
+ index-n-1+ns
+ index-n+ns
+ index-n+1+ns
+ index-1+ns
+ index+1+ns
+ index+n-1+ns
+ index+n+ns
+ index+n+1+ns
+ index+ns
+ 
+ */
