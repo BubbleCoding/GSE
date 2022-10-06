@@ -1,10 +1,15 @@
 # Game of life 3D
 
 Course: Advanced Topics in Computer Graphics
+
 Start: 05/10/20200 End: 
+
 ECTS: 4
+
 Grade: To be achieved
+
 Course website: Can I place this here?
+
 
 Course Overview
 This course will dive into specific topics in the broad area of computer graphics.
