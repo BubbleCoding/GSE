@@ -14,7 +14,7 @@ It is Turing complete and can simulate a universal constructor or any other Turi
 -- https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life --
 
 Rules of my game of life:<br/>
-if a node has 2 neighbours it becomes/stays alive. If a node has less than 2 or more then 2 neughbours it dies.
+if a node has 2 neighbours it becomes/stays alive. If a node has less than 2 or more then 2 neighbours it dies.
 
 Resources used to code:<br/>
 https://processing.org/
