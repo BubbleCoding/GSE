@@ -1,4 +1,4 @@
-# Game of life 3D
+# Advanced Topics in Computer Graphics
 
 Course: Advanced Topics in Computer Graphics<br/>
 Start: 05/10/2020<br/>
