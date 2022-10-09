@@ -1,4 +1,4 @@
-int cubeSize = 5;
+int cubeSize = 25;
 ArrayList<Cube> cubes = new ArrayList<Cube>();
 int i = 0;
 int totalCubes = 10;
@@ -52,13 +52,13 @@ class Cube {
 
   void update() {
     int total = neighbours.size();
-    if (total >= 3) {
+    if (total >= 4) {
       alive = false;
     }
     if (total <= 1) {
       alive = false;
     }
-    if (total == 2) {
+    if (total == 3) {
       alive = true;
     }
   }
@@ -75,10 +75,10 @@ class Cube {
       return;
     }
     pushMatrix();
-    translate(2*cubeSize*location[0], 2*cubeSize*location[1], 2*cubeSize*location[2]);
-    rotateX(frameCount*0.01);
-    rotateY(frameCount*0.01);
-    rotateZ(frameCount*0.01);
+    translate(cubeSize*location[0], cubeSize*location[1], cubeSize*location[2]);
+    //rotateX(frameCount*0.01);
+    //rotateY(frameCount*0.01);
+    //rotateZ(frameCount*0.01);
     fill(location[0]*15, location[1]*15, location[2]*15);
     box(cubeSize);
     popMatrix();

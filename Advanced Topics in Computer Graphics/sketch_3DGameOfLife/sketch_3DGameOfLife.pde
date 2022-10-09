@@ -1,21 +1,29 @@
-int cubeSize = 5;
+int cubeSize = 15;
 ArrayList<Cube> cubes = new ArrayList<Cube>();
 int i = 0;
-int totalCubes = 10;
-int n = 20;
-int ns = 400;
-int lifeCycleSpeed = 1000;
+int totalCubes = 50;
+int n;
+int ns;
+int nss;
+int lifeCycleSpeed = 100;
 int timer = 0;
+int exterminationTimer = 0;
+int exterminationCycle;
+int cycle;
+int reanimate = 3;
+float startPercentage = 1;
 
 void setup() {
   size(1250, 1250, P3D);
   // Make cubes
   int index = 0;
-  n = 2*totalCubes;
+  exterminationCycle = 30 * lifeCycleSpeed;
+  n = totalCubes;
   ns = n*n;
-  for (var i =-totalCubes; i<totalCubes; i++) {
-    for (var j =-totalCubes; j<totalCubes; j++) {
-      for (var k =-totalCubes; k<totalCubes; k++) {
+  nss = n*n*n;
+  for (var i = 0; i<totalCubes; i++) {
+    for (var j =0; j<totalCubes; j++) {
+      for (var k =0; k<totalCubes; k++) {
         cubes.add(new Cube(i, j, k, index));
         index++;
       }
@@ -23,7 +31,8 @@ void setup() {
   }
   //  which cubes start alive/death
   for (Cube cube : cubes) {
-    cube.startState();
+    //println(cube.getLocation());
+    cube.startState(startPercentage);
     cube.makeNeighbourList();
   }
 }
@@ -31,34 +40,49 @@ void setup() {
 void draw() {
   background(100, 200, 0);
   translate(width/2, height/2);
-  rotateX(frameCount*0.01);
-  rotateY(frameCount*0.01);
+  //rotateX(frameCount*0.011);
+  rotateY(frameCount*0.012);
+  //rotateZ(frameCount*0.013);
   int wait = millis() - timer;
-  for (Cube cube : cubes) {
-    cube.update();
-  }
   if (wait >= lifeCycleSpeed) {
+    //println(" gameOfLife " + cycle );
+    cycle++;
+    for (Cube cube : cubes) {
+      cube.checkNeighbours();
+    }
     for (Cube cube : cubes) {
       cube.gameOfLife();
     }
     timer = millis();
   }
+  int exterminationWait = millis() - exterminationTimer;
+  if (exterminationWait >= exterminationCycle) {
+    print("hi");
+    for (Cube cube : cubes) {
+      cube.startState(5);
+    }
+    exterminationTimer = millis();
+  }
+  for (Cube cube : cubes) {
+    cube.update();
+  }
 }
 
 class Cube {
-  int[] location={0, 0, 0};
+  IntList location;
   IntList NeighbourList;
   int index = 0;
-  int aliveNeighbours = 0;
+  int aliveNeighbours;
   boolean alive = true;
   ArrayList<Cube> neighbours = new ArrayList<Cube>();
 
 
-  Cube (int x, int y, int z, int index) {
-    location[0] = x;
-    location[1] = y;
-    location[2] = z;
-    index = index;
+  Cube (int x, int y, int z, int indexGet) {
+    location = new IntList();
+    location.append(x);
+    location.append(y);
+    location.append(z);
+    index = indexGet;
   }
 
   void update() {
@@ -66,19 +90,19 @@ class Cube {
   }
 
   void gameOfLife() {
-    checkNeighbours();
-    if (aliveNeighbours >= 3) {
+    //println(aliveNeighbours);
+    if (aliveNeighbours >= reanimate+1) {
       alive = false;
-    } else if (aliveNeighbours <= 1) {
+    } else if (aliveNeighbours <= reanimate-2) {
       alive = false;
-    } else if (aliveNeighbours == 2) {
+    } else if (aliveNeighbours == reanimate) {
       alive = true;
     }
   }
 
-  void startState() {
+  void startState(float percentage) {
     float ran = random(100);
-    if ( ran < 50) {
+    if ( ran < 100-percentage) {
       alive = false;
     }
   }
@@ -87,16 +111,28 @@ class Cube {
     return alive;
   }
 
+  IntList getLocation() {
+    return location;
+  }
+  int getLocationX() {
+    return location.get(0);
+  }
+  int getLocationY() {
+    return location.get(1);
+  }
+  int getLocationZ() {
+    return location.get(2);
+  }
+
+
   void display() {
     if (alive == false) {
       return;
     }
     pushMatrix();
-    translate(2*cubeSize*location[0], 2*cubeSize*location[1], 2*cubeSize*location[2]);
-    rotateX(frameCount*0.01);
-    rotateY(frameCount*0.01);
-    rotateZ(frameCount*0.01);
-    fill(location[0]*15, location[1]*15, location[2]*15);
+    translate(cubeSize*location.get(0), cubeSize*location.get(1), cubeSize*location.get(2));
+    translate(-((n*cubeSize)/2), -(n*cubeSize)/2, -(n*cubeSize)/2);
+    fill(location.get(0)*(255/n), location.get(1)*(255/n), location.get(2)*(255/n));
     box(cubeSize);
     popMatrix();
   }
@@ -105,7 +141,16 @@ class Cube {
     NeighbourList = new IntList();
     NeighbourList.append(new int[]{index-n-1, index-n, index-n+1, index-1, index+1, index+n-1, index+n, index+n+1, index-n-1-ns, index-n-ns, index-n+1-ns, index-1-ns, index+1-ns, index+n-1-ns, index+n-ns, index+n+1-ns, index-ns, index-n-1+ns, index-n+ns, index-n+1+ns, index-1+ns, index+1+ns, index+n-1+ns, index+n+ns, index+n+1+ns, index+ns});
     for (int i = NeighbourList.size() - 1; i >= 0; i--) {
-      if (NeighbourList.get(i) < 0) {
+      if (NeighbourList.get(i) < 0 || NeighbourList.get(i) >= nss) {
+        NeighbourList.remove(i);
+      }
+    }
+    for (int i = NeighbourList.size() - 1; i >= 0; i--) {
+      if (cubes.get(NeighbourList.get(i)).getLocationX() - getLocationX() > 1 || cubes.get(NeighbourList.get(i)).getLocationX() - getLocationX() < -1) {
+        NeighbourList.remove(i);
+      } else if (cubes.get(NeighbourList.get(i)).getLocationY() - getLocationY() > 1 || cubes.get(NeighbourList.get(i)).getLocationY() - getLocationY() < -1) {
+        NeighbourList.remove(i);
+      } else if (cubes.get(NeighbourList.get(i)).getLocationZ() - getLocationZ() > 1 || cubes.get(NeighbourList.get(i)).getLocationZ() - getLocationZ() < -1) {
         NeighbourList.remove(i);
       }
     }
@@ -114,7 +159,8 @@ class Cube {
   void checkNeighbours() {
     aliveNeighbours=0;
     for (int i = NeighbourList.size() - 1; i >= 0; i--) {
-      if (cubes.get(i).isAlive()) {
+      if (cubes.get(NeighbourList.get(i)).isAlive()) {
+        //println(cubes.get(NeighbourList.get(i)));
         aliveNeighbours++;
       }
     }
@@ -156,5 +202,4 @@ x = index
  index+n+ns
  index+n+1+ns
  index+ns
- 
  */
