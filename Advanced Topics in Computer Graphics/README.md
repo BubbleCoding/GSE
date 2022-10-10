@@ -15,7 +15,7 @@ While details have not yet been decided, the direction will be procedurally gene
 The course will require a significant amount of practical work, so programming knowledge is required.<br/>
 We will implement common algorithms for PCG in computer games and put them to use in a VR environment.<br/>
 
-Deadlines:<br/>
+Assignments:<br/>
 3D Game of Life<br/>
 
 Personal review of the course?<br/>
