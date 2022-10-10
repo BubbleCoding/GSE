@@ -15,9 +15,9 @@ It is Turing complete and can simulate a universal constructor or any other Turi
 -- https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life --
 
 Rules of my game of life:<br/>
-if a node has 3 neighbours it becomes/stays alive. If a node has less than 2 or more then 3 neighbours it dies. if a node has 2 neighbours its state doesn't change.<br/>
+if a node has 3 neighbours it becomes/stays alive. If a node has less than 2 or more then 3 neighbours it dies. if a node has 2 neighbours its state doesn't change. These are the base rules, but by changing the reanimate variable the rules can be changed however you want.<br/>
 Math used<br/>
-TO find all the neighbours of each node I first did some exploration to figure out how each node is related to each other. Since each node has a index value that never changes I used that to figure out what all the index values are of the neighbours and then gave each node a list of neighbour indices. I figourde out that you can find each neighbour with:
+To find all the neighbours of each node I first did some exploration to figure out how each node is related to each other. Since each node has a index value that never changes I used that to figure out what all the index values are of the neighbours and then gave each node a list of neighbour indices. I figourde out that you can find each neighbour with:
 
 n = width of grid
 
@@ -32,7 +32,7 @@ index-n-1+n*n, index-n+n*n, index-n+1+n*n, index-1+n*n, index+1+n*n, index+n-1+n
 
 However when you use this you need to keep in mind that when a node is at the edge of the grid it will also add nodes that arent their neighbour. To fix this we first need to remove all nullpointer expections and afterward remove each neighbour that isnt a real neighbour but that does exist. To do this I compared each neighbour to the node in question if they had a x, y or z value that was further away than 1 step. If done properly each node should have between 7 and 26 neighbours.<br/>
 
-Since the most of fun for me is seeing the life form grow I created a function that kills off a variable percentage every varaible life cycles. <br/>
+Extermination: Since the most of fun for me is seeing the life form grow I created a function that kills off a variable percentage every varaible life cycles. <br/>
 
 Resources used to code:<br/>
 https://processing.org/
