@@ -22,15 +22,15 @@ TO find all the neighbours of each node I first did some exploration to figure o
 n = width of grid
 
 middle layer<br/>
-index-n-1  index-n index-n+1 index-1 index+1 index+n-1 index+n index+n+1
+index-n-1,  index-n, index-n+1, index-1, index+1, index+n-1, index+n, index+n+1
  
 bottom layer<br/>
-index-n-1-n*n index-n-n*n index-n+1-n*n index-1-n*n index+1-n*n index+n-1-n*n index+n-n*n index+n+1-n*n index-n*n<br/>
+index-n-1-n*n, index-n-n*n, index-n+1-n*n, index-1-n*n, index+1-n*n, index+n-1-n*n, index+n-n*n, index+n+1-n*n, index-n*n<br/>
  
 top layer <br/>
-index-n-1+n*n index-n+n*n index-n+1+n*n index-1+n*n index+1+n*n index+n-1+n*n index+n+n*n index+n+1+n*n index+n*n<br/>
+index-n-1+n*n, index-n+n*n, index-n+1+n*n, index-1+n*n, index+1+n*n, index+n-1+n*n, index+n+n*n, index+n+1+n*n, index+n*n<br/>
 
-However when you use this you need to keep in mind that when a node is at the edge of the grid it will also add nodes that arent their neighbour. To fix this we first need to remove all nullpointer expections and afterward remove each neighbour that isnt a real neighbour but that does exist. To do this I compared each neighbour to the node in question if they had a x, y or z value that was further away than 1 step.<br/>
+However when you use this you need to keep in mind that when a node is at the edge of the grid it will also add nodes that arent their neighbour. To fix this we first need to remove all nullpointer expections and afterward remove each neighbour that isnt a real neighbour but that does exist. To do this I compared each neighbour to the node in question if they had a x, y or z value that was further away than 1 step. If done properly each node should have between 7 and 26 neighbours.<br/>
 
 Resources used to code:<br/>
 https://processing.org/
