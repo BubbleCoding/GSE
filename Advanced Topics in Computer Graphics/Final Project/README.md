@@ -11,7 +11,7 @@ requirments <br/>
 
 Paper Format<br/>
 Orderly fulfillment of formal requirements:<br/>
-  A paper follows the Chicago Manual of Style - use the Overleaf template if you want a strict implementation.<br/>
+emsp A paper follows the Chicago Manual of Style - use the Overleaf template if you want a strict implementation.<br/>
   A paper is coherently formatted<br/>
   A paper has a bibliography referencing all employed sources, including but not limited to online videos, web pages, and code repositories<br/>
   Adequate reliance on research literature:<br/>
