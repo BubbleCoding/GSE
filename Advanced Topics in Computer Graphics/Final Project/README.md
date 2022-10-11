@@ -11,7 +11,7 @@ The final project needs to include (i) <strong>procedurally generated content</s
 <br/>
 <strong>Paper Format</strong><br/>
 Orderly fulfillment of formal requirements:<br/>
-&emsp; A paper follows the Chicago Manual of Style - use the Overleaf template if you want a strict implementation.<br/>
+&emsp;A paper follows the Chicago Manual of Style - use the Overleaf template if you want a strict implementation.<br/>
 &emsp;A paper is coherently formatted<br/>
 &emsp;A paper has a bibliography referencing all employed sources, including but not limited to online videos, web pages, and code repositories<br/>
 &emsp;Adequate reliance on research literature:<br/>
