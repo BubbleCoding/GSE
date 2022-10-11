@@ -1,5 +1,5 @@
 
-Final Project<br/>
+<h1>Final Project<h1/><br/>
 The final project needs to include (i) procedurally generated content based on an algorithm implementation of your choice and (ii) needs to be runnable on a VR headset. An easy choice is to prepare a WebXR export or use of a framework with WebXR support. For submission you need to upload the following files in a single ZIP file.<br/>
 
 Your work as source code or a link to Github, Bitbucket, etc.<br/>
