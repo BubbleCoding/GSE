@@ -9,7 +9,7 @@ requirments <br/>
 &emsp;A formatted PDF work report of ~ 1000 words detailing what you did and the lessons learned and obstacles encountered.<br/>
 &emsp;Please note term paper format, code of conduct, and plagiarism policies apply as detailed below.<br/>
 
-Paper Format<br/>
+<strong>Paper Format</strong><br/>
 Orderly fulfillment of formal requirements:<br/>
 &emsp; A paper follows the Chicago Manual of Style - use the Overleaf template if you want a strict implementation.<br/>
 &emsp;A paper is coherently formatted<br/>
