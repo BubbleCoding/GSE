@@ -2,6 +2,7 @@
 
 Course: Advanced Topics in Computer Graphics<br/>
 Start: 05/10/2020<br/>
+Exam: <br/>
 End:<br/>
 ECTS: 4<br/>
 Grade: To be achieved<br/>
