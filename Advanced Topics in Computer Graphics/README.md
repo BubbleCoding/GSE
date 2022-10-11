@@ -5,9 +5,9 @@ Start: 05/10/2020<br/>
 End:<br/>
 ECTS: 4<br/>
 Grade: To be achieved<br/>
-Teacher:<br/>
+Teacher: Assoc. Prof. Dr. DI Mathias Lux<br/>
 
-Course website: Can I place this here?<br/>
+Course website: http://www.itec.uni-klu.ac.at/~mlux/index.php?id=courses/topics-cg-ws22.md<br/>
 
 Course Overview<br/>
 This course will dive into specific topics in the broad area of computer graphics.<br/>
