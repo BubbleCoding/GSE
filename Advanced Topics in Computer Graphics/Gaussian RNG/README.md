@@ -15,7 +15,7 @@ In statistics, a normal distribution (also known as Gaussian, Gauss, or Laplaceâ
 
 Resources used to code:<br/>
 https://processing.org/<br/>
-https://processing.org/examples/button.html<br/>
+The button I used is adopted from https://processing.org/examples/button.html<br/>
 
 Personal review of this assignment<br/>
 This was quite the easy task. I actually think I have created this before during my first year of my bachelors. it took me about an hour maybe 2.
