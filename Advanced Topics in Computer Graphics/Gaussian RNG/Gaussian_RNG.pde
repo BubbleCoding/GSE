@@ -2,12 +2,14 @@
 
 ArrayList<GaussianBullet> gaussianBullets = new ArrayList<GaussianBullet>();
 ArrayList<RandomBullet> randomBullets = new ArrayList<RandomBullet>();
+ArrayList<RandomBullet2> randomBullets2 = new ArrayList<RandomBullet2>();
+
 Target target;
 Button button;
 Text text;
 Text text2;
 int gaussianMultiplier = 150;
-int numberOfBullets = 200;
+int numberOfBullets = 1000;
 int randomBulletSpread = 350;
 int targetSize = 700;
 
@@ -18,6 +20,9 @@ void setup() {
   }
   for (int i = 0; i <numberOfBullets; i++) {
     randomBullets.add(new RandomBullet(int(random(-randomBulletSpread, randomBulletSpread)), int(random(-randomBulletSpread, randomBulletSpread))));
+  }
+  for (int i = 0; i <numberOfBullets; i++) {
+    randomBullets2.add(new RandomBullet2(int(random(-randomBulletSpread, randomBulletSpread)), random(6.28)));
   }
   target = new Target();
   button = new Button(1000, 50, 100, "Reset bullets");
@@ -37,6 +42,9 @@ void draw() {
     bullet.update();
   }
   for (RandomBullet bullet : randomBullets) {
+    bullet.update();
+  }
+  for (RandomBullet2 bullet : randomBullets2) {
     bullet.update();
   }
 }
@@ -85,6 +93,28 @@ class RandomBullet {
     translate(width/2, height/2);
     fill(255, 0, 0);
     circle(position.get(0), position.get(1), 20);
+    popMatrix();
+  }
+}
+
+class RandomBullet2 {
+  float posX;
+  float posY;
+
+  RandomBullet2(int x, float y) {
+    posX =x;
+    posY =y;
+  }
+
+  void update() {
+    display();
+  }
+
+  void display() {
+    pushMatrix();
+    translate(width/2, height/2);
+    fill(0, 0, 255);
+    circle(posX, tan(posY)*posX, 20);
     popMatrix();
   }
 }
@@ -174,11 +204,15 @@ class Button {
     if (rectOver) {
       gaussianBullets.clear();
       randomBullets.clear();
+      randomBullets2.clear();
       for (int i = 0; i <numberOfBullets; i++) {
         gaussianBullets.add(new GaussianBullet(int(randomGaussian()*gaussianMultiplier), int(randomGaussian()*gaussianMultiplier)));
       }
       for (int i = 0; i <numberOfBullets; i++) {
         randomBullets.add(new RandomBullet(int(random(-randomBulletSpread, randomBulletSpread)), int(random(-randomBulletSpread, randomBulletSpread))));
+      }
+      for (int i = 0; i <numberOfBullets; i++) {
+        randomBullets2.add(new RandomBullet2(int(random(-randomBulletSpread, randomBulletSpread)), int(random(360))));
       }
     }
   }
