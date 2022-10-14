@@ -8,10 +8,12 @@ Target target;
 Button button;
 Text text;
 Text text2;
+Text text3;
 int gaussianMultiplier = 150;
 int numberOfBullets = 1000;
 int randomBulletSpread = 350;
 int targetSize = 700;
+int bulletSize = 10;
 
 void setup() {
   size(1250, 1250);
@@ -28,6 +30,7 @@ void setup() {
   button = new Button(1000, 50, 100, "Reset bullets");
   text = new Text("GaussianBullet is green", LEFT, 40, 64, 64, color(0, 255, 0));
   text2 = new Text("RandomBullet is red", LEFT, 40, 128, 64, color(255, 0, 0));
+  text3 = new Text("RandomBulletCircle is Blue", LEFT, 40, 192, 64, color(0, 0, 255));
 }
 
 void draw() {
@@ -37,6 +40,7 @@ void draw() {
   textAlign(LEFT);
   text.update();
   text2.update();
+  text3.update();
   target.update();
   for (GaussianBullet bullet : gaussianBullets) {
     bullet.update();
@@ -47,10 +51,18 @@ void draw() {
   for (RandomBullet2 bullet : randomBullets2) {
     bullet.update();
   }
+  rect(0, height*0.9, width, height*.1);
+  fill(255,255,255);
+  text("0", 0, height-20);
+  text(height, width*0.9, height-20);
+  text("Number of bullets:" + numberOfBullets, width*0.1, height-20);
 }
 
 void mousePressed() {
   button.mousePress();
+  if(mouseY > 0.9*width){
+    numberOfBullets = mouseX;
+  }
 }
 
 class GaussianBullet {
@@ -70,7 +82,7 @@ class GaussianBullet {
     pushMatrix();
     translate(width/2, height/2);
     fill(0, 255, 0);
-    circle(position.get(0), position.get(1), 20);
+    circle(position.get(0), position.get(1), bulletSize);
     popMatrix();
   }
 }
@@ -92,7 +104,7 @@ class RandomBullet {
     pushMatrix();
     translate(width/2, height/2);
     fill(255, 0, 0);
-    circle(position.get(0), position.get(1), 20);
+    circle(position.get(0), position.get(1), bulletSize);
     popMatrix();
   }
 }
@@ -114,7 +126,7 @@ class RandomBullet2 {
     pushMatrix();
     translate(width/2, height/2);
     fill(0, 0, 255);
-    circle(posX, tan(posY)*posX, 20);
+    circle(sqrt(posX)*cos(posY)*20, sqrt(posX)*sin(posY)*20, bulletSize);
     popMatrix();
   }
 }
