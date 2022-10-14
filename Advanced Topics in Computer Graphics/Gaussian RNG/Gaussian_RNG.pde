@@ -14,6 +14,9 @@ int numberOfBullets = 1000;
 int randomBulletSpread = 350;
 int targetSize = 700;
 int bulletSize = 10;
+boolean gaussian = true;
+boolean random = true;
+boolean randomCircle = true;
 
 void setup() {
   size(1250, 1250);
@@ -42,17 +45,24 @@ void draw() {
   text2.update();
   text3.update();
   target.update();
-  for (GaussianBullet bullet : gaussianBullets) {
-    bullet.update();
+  if (gaussian) {
+    for (GaussianBullet bullet : gaussianBullets) {
+      bullet.update();
+    }
   }
-  for (RandomBullet bullet : randomBullets) {
-    bullet.update();
+  if (random) {
+    for (RandomBullet bullet : randomBullets) {
+      bullet.update();
+    }
   }
-  for (RandomBullet2 bullet : randomBullets2) {
-    bullet.update();
+  if (randomCircle) {
+    for (RandomBullet2 bullet : randomBullets2) {
+      bullet.update();
+    }
   }
+  fill(125,125,125);
   rect(0, height*0.9, width, height*.1);
-  fill(255,255,255);
+  fill(255, 255, 255);
   text("0", 0, height-20);
   text(height, width*0.9, height-20);
   text("Number of bullets:" + numberOfBullets, width*0.1, height-20);
@@ -60,8 +70,20 @@ void draw() {
 
 void mousePressed() {
   button.mousePress();
-  if(mouseY > 0.9*width){
+  if (mouseY > 0.9*width) {
     numberOfBullets = mouseX;
+  }
+  if (mouseY < 64 && mouseX > 40 && mouseX < 600) {
+    gaussian = !gaussian;
+    text.flip();
+  }
+  if (mouseY > 64 && mouseY <128 && mouseX > 40 && mouseX < 600) {
+    random = !random;
+    text2.flip();
+  }
+  if (mouseY > 128 && mouseY <192 && mouseX > 40 && mouseX < 600) {
+    randomCircle = !randomCircle;
+    text3.flip();
   }
 }
 
@@ -160,8 +182,9 @@ class Text {
   int yText;
   int sizeText;
   color Color;
+  boolean on = true;
 
-  Text(String t, int a, int x, int y, int s, color c ) {
+  Text(String t, int a, int x, int y, int s, color c) {
     text = t;
     align = a;
     xText = x;
@@ -171,13 +194,21 @@ class Text {
   }
   void update() {
     display();
+
   }
 
   void display() {
     textSize(sizeText);
     textAlign(align);
     fill(Color);
+    if(on == false){
+    fill(75,75,75);
+  }
     text(text, xText, yText);
+  }
+
+  void flip() {
+    on = !on;
   }
 }
 
