@@ -1,7 +1,7 @@
 # Game of life 3D
 
 Start: 05/10/2022<br/>
-Deadline: 1 Month after start<br/>
+Deadline: 20/12/2022<br/>
 Finished: 09/10/2022<br/>
 Language used: Processing<br/>
 Programs used: Processing 4.0.1<br/>
