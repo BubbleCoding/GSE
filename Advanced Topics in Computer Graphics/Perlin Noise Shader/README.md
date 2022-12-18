@@ -6,6 +6,8 @@ Finished: 18/12/2022
 Language used: shadertoy
 Programs used: shadertoy.com
 
+Final product: https://www.shadertoy.com/view/mtXGRN
+
 Resources used to code:
 https://www.youtube.com/watch?v=zXsWftRdsvU&t=298s
 https://www.youtube.com/watch?v=il_Qg9AqQkE&list=PLGmrMu-IwbgsVjE7SAtFaWyhZXyBjJNnO
