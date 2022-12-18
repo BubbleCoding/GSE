@@ -1,7 +1,8 @@
 // Assignment Advanced Computer Graphics perlin* noise map
 // Code based on https://www.youtube.com/watch?v=zXsWftRdsvU
 // And help from this playlist https://www.youtube.com/playlist?list=PLGmrMu-IwbgsVjE7SAtFaWyhZXyBjJNnO
-    
+
+// Best way to run is by going to shadertoy.com make a new project and past it. or go to https://www.shadertoy.com/view/mtXGRN
     
 int octaves = 8;
     
