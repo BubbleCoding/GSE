@@ -18,6 +18,10 @@ We will implement common algorithms for PCG in computer games and put them to us
 
 Assignments:<br/>
 3D Game of Life<br/>
+Gaussian RNG <br/>
+Perlin Noise Shader <br/>
+3D Maze <br/>
+
 
 Personal review of the course?<br/>
 What did I learn during this course?<br/>
