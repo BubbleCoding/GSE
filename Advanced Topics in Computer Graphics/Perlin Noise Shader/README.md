@@ -1,12 +1,12 @@
 # Perlin Noise Shader
 
-Start: 16/12/2022
+Start: 16/12/2022 </br>
 Deadline: 20/12/2022<br/>
-Finished: 18/12/2022
-Language used: shadertoy
-Programs used: shadertoy.com
+Finished: 18/12/2022 </br>
+Language used: shadertoy </br>
+Programs used: shadertoy.com </br>
 
-Final product: https://www.shadertoy.com/view/mtXGRN
+Final product: https://www.shadertoy.com/view/mtXGRN </br>
 
 Resources used to code: </br>
 https://www.youtube.com/watch?v=zXsWftRdsvU&t=298s </br>
