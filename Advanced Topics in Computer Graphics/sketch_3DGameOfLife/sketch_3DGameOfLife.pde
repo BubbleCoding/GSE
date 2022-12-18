@@ -1,23 +1,23 @@
 int cubeSize = 15;
 ArrayList<Cube> cubes = new ArrayList<Cube>();
 int i = 0;
-int totalCubes = 50;
 int n;
 int ns;
 int nss;
-int lifeCycleSpeed = 100;
 int timer = 0;
 int exterminationTimer = 0;
 int exterminationCycle;
 int cycle;
-int reanimate = 3;
-float startPercentage = 1;
+int totalCubes = 20;          // Increase amount of cubes
+int lifeCycleSpeed = 1000;    // Change this for slower/faster duplication
+int reanimate = 3;            // Change this to govern how many neighbours a cell needs to become/stay alive
+float startPercentage = 1;    // Change this to increase/decrease the amount of alive cells at the start
 
 void setup() {
   size(1250, 1250, P3D);
   // Make cubes
   int index = 0;
-  exterminationCycle = 30 * lifeCycleSpeed;
+  exterminationCycle = 100 * lifeCycleSpeed;
   n = totalCubes;
   ns = n*n;
   nss = n*n*n;
@@ -31,7 +31,6 @@ void setup() {
   }
   //  which cubes start alive/death
   for (Cube cube : cubes) {
-    //println(cube.getLocation());
     cube.startState(startPercentage);
     cube.makeNeighbourList();
   }
@@ -45,7 +44,6 @@ void draw() {
   //rotateZ(frameCount*0.013);
   int wait = millis() - timer;
   if (wait >= lifeCycleSpeed) {
-    //println(" gameOfLife " + cycle );
     cycle++;
     for (Cube cube : cubes) {
       cube.checkNeighbours();
@@ -89,8 +87,8 @@ class Cube {
     display();
   }
 
+       // Game of life rules
   void gameOfLife() {
-    //println(aliveNeighbours);
     if (aliveNeighbours >= reanimate+1) {
       alive = false;
     } else if (aliveNeighbours <= reanimate-2) {
@@ -99,7 +97,7 @@ class Cube {
       alive = true;
     }
   }
-
+      // Set the amount of alive cells at the start
   void startState(float percentage) {
     float ran = random(100);
     if ( ran < 100-percentage) {
@@ -124,7 +122,7 @@ class Cube {
     return location.get(2);
   }
 
-
+      // Display everything
   void display() {
     if (alive == false) {
       return;
@@ -137,6 +135,7 @@ class Cube {
     popMatrix();
   }
 
+      // Give each cell their list of neighboyurs. This decreases the computations needed drastically
   void makeNeighbourList() {
     NeighbourList = new IntList();
     NeighbourList.append(new int[]{index-n-1, index-n, index-n+1, index-1, index+1, index+n-1, index+n, index+n+1, index-n-1-ns, index-n-ns, index-n+1-ns, index-1-ns, index+1-ns, index+n-1-ns, index+n-ns, index+n+1-ns, index-ns, index-n-1+ns, index-n+ns, index-n+1+ns, index-1+ns, index+1+ns, index+n-1+ns, index+n+ns, index+n+1+ns, index+ns});
@@ -155,51 +154,13 @@ class Cube {
       }
     }
   }
-
+      // How many Alive neightbours do I have
   void checkNeighbours() {
     aliveNeighbours=0;
     for (int i = NeighbourList.size() - 1; i >= 0; i--) {
       if (cubes.get(NeighbourList.get(i)).isAlive()) {
-        //println(cubes.get(NeighbourList.get(i)));
         aliveNeighbours++;
       }
     }
   }
 }
-
-/*
-x = index
- n = width
- check
- middle layer
- index-n-1
- index-n
- index-n+1
- index-1
- index+1
- index+n-1
- index+n
- index+n+1
- 
- bottom layer
- index-n-1-ns
- index-n-ns
- index-n+1-ns
- index-1-ns
- index+1-ns
- index+n-1-ns
- index+n-ns
- index+n+1-ns
- index-ns
- 
- top layer
- index-n-1+ns
- index-n+ns
- index-n+1+ns
- index-1+ns
- index+1+ns
- index+n-1+ns
- index+n+ns
- index+n+1+ns
- index+ns
- */
