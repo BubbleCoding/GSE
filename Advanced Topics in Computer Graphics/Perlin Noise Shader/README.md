@@ -8,7 +8,7 @@ Programs used: shadertoy.com
 
 Final product: https://www.shadertoy.com/view/mtXGRN
 
-Resources used to code:
+Resources used to code: </br>
 https://www.youtube.com/watch?v=zXsWftRdsvU&t=298s </br>
 https://www.youtube.com/watch?v=il_Qg9AqQkE&list=PLGmrMu-IwbgsVjE7SAtFaWyhZXyBjJNnO <br/>
 
