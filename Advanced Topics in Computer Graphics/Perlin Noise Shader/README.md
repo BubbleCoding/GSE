@@ -1,5 +1,7 @@
+# Perlin Noise Shader
+
 Start: 16/12/2022
-Deadline: 20 Dec
+Deadline: 20/12/2022<br/>
 Finished: 18/12/2022
 Language used: shadertoy
 Programs used: shadertoy.com
