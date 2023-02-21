@@ -1,0 +1,101 @@
+var createScene = async function () {
+
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, 0), scene);
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.attachControl(canvas, true);
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.7;
+
+
+    function fract(num){
+        return (num - Math.floor(num));
+    }
+    function noise(x,z){
+        return fract(Math.sin(x*2265+z*3122)*noiseVal);
+    }
+
+    function random(){
+        return Math.random();
+    }
+    var noiseVal = 8354;
+    var cols = 50;
+    var rows = 50;
+    var scale = 1;
+    var grid = [];
+    var time = 0;
+    for(var x =0; x< cols; x++){
+        for(var z = 0; z<rows; z++){
+            grid.push(new BABYLON.Vector3(x,0,z));
+        }
+    }
+    for(var i = 0; i< grid.length; i++){
+            triangle(grid[i],i);
+            triangleInvert(grid[i],i);
+    }
+
+    function triangle(vector, index){
+        var x = vector.x - rows/2;
+        var z = vector.z - cols/2;
+        var customMesh = new BABYLON.Mesh("custom", scene);
+        
+        //Set arrays for positions and indices
+        var positions = [x, noise(x,z), z, x+scale,noise(x+scale,z), z, x, noise(x,z+scale), z+scale,];
+        var indices = [0, 1, 2];	
+        var colors = [0, noise(x,z), 0, 1, 0, noise(x+scale,z), 0, 1, 0, noise(x,z+scale), 0, 1];
+        console.log(noise(x,z));
+        //Empty array to contain calculated values
+        var normals = [];
+        
+        var vertexData = new BABYLON.VertexData();
+        BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+
+        //Assign positions, indices and normals to vertexData
+        vertexData.positions = positions;
+        vertexData.indices = indices;
+        vertexData.normals = normals;
+        vertexData.colors = colors;
+
+        //Apply vertexData to custom mesh
+        vertexData.applyToMesh(customMesh);
+    }
+
+    function triangleInvert(vector, index){
+        var x = vector.x - rows/2;
+        var z = vector.z - cols/2;
+        var customMesh = new BABYLON.Mesh("custom", scene);
+        
+        //Set arrays for positions and indices
+        //var positions = [x, y, z-scale, x, y, z+scale, x-scale, y, z+scale,];
+        var positions = [x+scale, noise(x+scale,z), z, x+scale, noise(x+scale,z+scale), z+scale, x, noise(x,z+scale), z+scale,];
+        var indices = [0, 1, 2];	
+        var colors = [0, noise(x+scale,z), 0, 1, 0, noise(x+scale,z+scale), 0, 1, 0, noise(x,z+scale), 0, 1];
+        
+        //Empty array to contain calculated values
+        var normals = [];
+        
+        var vertexData = new BABYLON.VertexData();
+        BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+
+        //Assign positions, indices and normals to vertexData
+        vertexData.positions = positions;
+        vertexData.indices = indices;
+        vertexData.normals = normals;
+        vertexData.colors = colors;
+
+        //Apply vertexData to custom mesh
+        vertexData.applyToMesh(customMesh, true);
+    }
+
+    scene.onBeforeRenderObservable.add(() => {
+    });
+
+
+    const env = scene.createDefaultEnvironment();
+
+    const xr = await scene.createDefaultXRExperienceAsync({
+        floorMeshes: [env.ground]
+    });
+
+    return scene;
+};

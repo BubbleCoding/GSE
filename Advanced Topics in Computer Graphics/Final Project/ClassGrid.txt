@@ -1,0 +1,82 @@
+const createScene = function () {
+    const scene = new BABYLON.Scene(engine);
+    
+    const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, true);
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
+    var spheres = [];
+    var triangles =[];
+
+    function fract(num){
+        return (num - Math.floor(num));
+    }
+    function noise(x,z){
+        return fract(Math.sin((x+time*0.000000000001)*2265+(z+time*0.000000000001)*3122)*noiseVal);
+    }
+    var noiseVal = 8354;
+    var cols = 5;
+    var rows = 5;
+    var scale = 1;
+    var grid = [];
+    var time = 0;
+    for(var x =0; x< cols; x++){
+        for(var z = 0; z<rows; z++){
+            grid.push(new BABYLON.Vector3(x,0,z));
+        }
+    }
+
+
+    class Triangle{
+        constructor(vector){
+            this.vector = vector;
+            this.customMesh = new BABYLON.Mesh("custom", scene);
+            this.y = 0;
+
+            this.positions = [
+                this.vector.x, noise(this.vector.x,this.vector.z), this.vector.z, 
+                this.vector.x+scale,noise(this.vector.x+scale,this.vector.z), this.vector.z, 
+                this.vector.x, noise(this.vector.x,this.vector.z+scale), this.vector.z+scale,
+                ];
+            this.indices = [0, 1, 2];	
+            this.colors = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
+            this.normals = [];
+            this.vertexData = new BABYLON.VertexData();
+            BABYLON.VertexData.ComputeNormals(this.positions, this.indices, this.normals);
+
+            this.vertexData.positions = this.positions;
+            this.vertexData.indices = this.indices;
+            this.vertexData.normals = this.normals;
+            this.vertexData.colors = this.colors;
+
+            //Apply vertexData to custom mesh
+            this.vertexData.applyToMesh(this.customMesh);
+        }
+        updateTriangle(){
+            this.y += 0.001 * scene.deltaTime;
+            this.positions = [
+                this.vector.x, noise(this.vector.x,this.vector.z), this.vector.z, 
+                this.vector.x+scale,noise(this.vector.x+scale,this.vector.z), this.vector.z, 
+                this.vector.x, noise(this.vector.x,this.vector.z+scale), this.vector.z+scale,
+                ];
+            this.vertexData.positions = this.positions;
+            this.vertexData.applyToMesh(this.customMesh);
+        }
+    }
+
+    for(var i = 0; i< grid.length; i++){
+        triangles.push(new Triangle(grid[i]));
+    }
+
+    var test = new Triangle(new BABYLON.Vector3(1,0,1));
+    
+
+    scene.onBeforeRenderObservable.add(() => {
+        time += scene.deltaTime;
+        for(var i = 0; i<grid.length; i++){
+            triangles[i].updateTriangle();
+        }
+    });
+
+    return scene;
+
+};

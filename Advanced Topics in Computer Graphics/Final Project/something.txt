@@ -1,0 +1,141 @@
+const createScene = function () {
+    const scene = new BABYLON.Scene(engine);
+    
+    const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, true);
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
+    var spheres = [];
+    var triangles =[];
+    var counterTriangles =[];
+    var noiseVal = 5841;
+    var cols = 10;
+    var rows = 10;
+    var scale = 1;
+    var grid = [];
+    var time = 0;
+
+    function map(value, low1, high1, low2, high2) {
+    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+    }
+    function fract(num){
+        return (num - Math.floor(num));
+    }
+    function noise(x,z){
+        x=x/1000;
+        z=z/1000;
+        return (fract(Math.sin((x+time*0.000000000005)*650+(z+time*0.000000000005)*8016)*noiseVal))*2-0.5;
+    }
+    for(var x =0; x< cols; x++){
+            for(var z = 0; z<rows; z++){
+                grid.push(new BABYLON.Vector3(x,noise(x,z),z));
+            }
+        }
+
+
+    class Triangle{
+        constructor(vector){
+            this.vector = vector;
+            this.customMesh = new BABYLON.Mesh("custom", scene);
+            this.first = 0;
+            this.second = 0;
+            this.third = 0;
+            this.positions = [
+                this.vector.x, noise(this.vector.x,this.vector.z), this.vector.z, 
+                this.vector.x+scale,noise(this.vector.x+scale,this.vector.z), this.vector.z, 
+                this.vector.x, noise(this.vector.x,this.vector.z+scale), this.vector.z+scale,
+                ];
+            this.indices = [0, 1, 2];	
+            this.colors = [
+                1, 0, 1, 1,
+                0, 1, 1, 1,
+                1, 1, 0, 1];
+            this.normals = [];
+            this.vertexData = new BABYLON.VertexData();
+            BABYLON.VertexData.ComputeNormals(this.positions, this.indices, this.normals);
+
+            this.vertexData.positions = this.positions;
+            this.vertexData.indices = this.indices;
+            this.vertexData.normals = this.normals;
+            this.vertexData.colors = this.colors;
+
+            //Apply vertexData to custom mesh
+            this.vertexData.applyToMesh(this.customMesh);
+        }
+        updateTriangle(){
+            console.log(this.first);
+            this.first += noise(this.positions[0],this.positions[2])*0.001;
+            this.second += noise(this.positions[3],this.positions[5])*0.001;
+            this.third += noise(this.positions[6],this.positions[8])*0.001;
+            this.positions = [
+                this.positions[0], this.first, this.positions[2],
+                this.positions[3], this.second, this.positions[5],
+                this.positions[6], this.third, this.positions[8],
+                ];
+            
+            this.vertexData.positions = this.positions;
+            this.vertexData.applyToMesh(this.customMesh);
+        }
+    }
+    class CounterTriangle{
+        constructor(vector){
+            this.vector = vector;
+            this.customMesh = new BABYLON.Mesh("custom", scene);
+            this.first = 0;
+            this.second = 0;
+            this.third = 0;
+            this.positions = [
+                this.vector.x+scale, noise(this.vector.x+scale,this.vector.z), this.vector.z, 
+                this.vector.x+scale,noise(this.vector.x+scale,this.vector.z), this.vector.z+scale, 
+                this.vector.x, noise(this.vector.x,this.vector.z+scale), this.vector.z+scale,
+                ];
+            this.indices = [0, 1, 2];	
+            this.colors = [
+                1, 0, 1, 1,
+                0, 1, 1, 1,
+                1, 1, 0, 1];
+            this.normals = [];
+            this.vertexData = new BABYLON.VertexData();
+            BABYLON.VertexData.ComputeNormals(this.positions, this.indices, this.normals);
+
+            this.vertexData.positions = this.positions;
+            this.vertexData.indices = this.indices;
+            this.vertexData.normals = this.normals;
+            this.vertexData.colors = this.colors;
+
+            //Apply vertexData to custom mesh
+            this.vertexData.applyToMesh(this.customMesh);
+        }
+        updateTriangle(){
+            console.log(this.first);
+            this.first += noise(this.positions[0],this.positions[2])*0.001;
+            this.second += noise(this.positions[3],this.positions[5])*0.001;
+            this.third += noise(this.positions[6],this.positions[8])*0.001;
+
+            this.positions = [
+                this.positions[0], this.first, this.positions[2],
+                this.positions[3], this.second, this.positions[5],
+                this.positions[6], this.third, this.positions[8],
+                ];
+            
+            this.vertexData.positions = this.positions;
+            this.vertexData.applyToMesh(this.customMesh);
+        }
+    }
+
+    for(var i = 0; i< grid.length; i++){
+        triangles.push(new Triangle(grid[i]));
+        counterTriangles.push(new CounterTriangle(grid[i]));
+    }
+    
+    scene.onBeforeRenderObservable.add(() => {
+        time += scene.deltaTime;
+        for(var i = 0; i<grid.length; i++){
+            triangles[i].updateTriangle();
+            counterTriangles[i].updateTriangle();
+            
+        }
+    });
+
+    return scene;
+
+};

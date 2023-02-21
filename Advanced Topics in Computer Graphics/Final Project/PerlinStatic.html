@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <!-- Babylon.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var createScene = async function () {
+
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, 0), scene);
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.attachControl(canvas, true);
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.7;
+
+
+    function fract(num){
+        return (num - Math.floor(num));
+    }
+    function noise(x,z){
+        return fract(Math.sin(x*2265+z*3122)*noiseVal);
+    }
+
+    function random(){
+        return Math.random();
+    }
+    var noiseVal = 8354;
+    var cols = 50;
+    var rows = 50;
+    var scale = 1;
+    var grid = [];
+    var time = 0;
+    for(var x =0; x< cols; x++){
+        for(var z = 0; z<rows; z++){
+            grid.push(new BABYLON.Vector3(x,0,z));
+        }
+    }
+    for(var i = 0; i< grid.length; i++){
+            triangle(grid[i],i);
+            triangleInvert(grid[i],i);
+    }
+
+    function triangle(vector, index){
+        var x = vector.x - rows/2;
+        var z = vector.z - cols/2;
+        var customMesh = new BABYLON.Mesh("custom", scene);
+        
+        //Set arrays for positions and indices
+        var positions = [x, noise(x,z), z, x+scale,noise(x+scale,z), z, x, noise(x,z+scale), z+scale,];
+        var indices = [0, 1, 2];	
+        var colors = [0, noise(x,z), 0, 1, 0, noise(x+scale,z), 0, 1, 0, noise(x,z+scale), 0, 1];
+        console.log(noise(x,z));
+        //Empty array to contain calculated values
+        var normals = [];
+        
+        var vertexData = new BABYLON.VertexData();
+        BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+
+        //Assign positions, indices and normals to vertexData
+        vertexData.positions = positions;
+        vertexData.indices = indices;
+        vertexData.normals = normals;
+        vertexData.colors = colors;
+
+        //Apply vertexData to custom mesh
+        vertexData.applyToMesh(customMesh);
+    }
+
+    function triangleInvert(vector, index){
+        var x = vector.x - rows/2;
+        var z = vector.z - cols/2;
+        var customMesh = new BABYLON.Mesh("custom", scene);
+        
+        //Set arrays for positions and indices
+        //var positions = [x, y, z-scale, x, y, z+scale, x-scale, y, z+scale,];
+        var positions = [x+scale, noise(x+scale,z), z, x+scale, noise(x+scale,z+scale), z+scale, x, noise(x,z+scale), z+scale,];
+        var indices = [0, 1, 2];	
+        var colors = [0, noise(x+scale,z), 0, 1, 0, noise(x+scale,z+scale), 0, 1, 0, noise(x,z+scale), 0, 1];
+        
+        //Empty array to contain calculated values
+        var normals = [];
+        
+        var vertexData = new BABYLON.VertexData();
+        BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+
+        //Assign positions, indices and normals to vertexData
+        vertexData.positions = positions;
+        vertexData.indices = indices;
+        vertexData.normals = normals;
+        vertexData.colors = colors;
+
+        //Apply vertexData to custom mesh
+        vertexData.applyToMesh(customMesh, true);
+    }
+
+    scene.onBeforeRenderObservable.add(() => {
+    });
+
+
+    const env = scene.createDefaultEnvironment();
+
+    const xr = await scene.createDefaultXRExperienceAsync({
+        floorMeshes: [env.ground]
+    });
+
+    return scene;
+};
+                window.initFunction = async function() {
+                    
+                    
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
+
+                    window.engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        startRenderLoop(engine, canvas);
+        window.scene = createScene();};
+        initFunction().then(() => {scene.then(returnedScene => { sceneToRender = returnedScene; });
+                            
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
